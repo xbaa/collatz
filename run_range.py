@@ -13,8 +13,7 @@ def run_range(start,stop):
 	test_num = start
 	while  test_num < stop:
 		if check((test_num-start),run_list) == False:
-#			power_of_two, level = collatz.collatz(mod52dec(test_num))
-			power_of_two, level = collatz(mod52dec(test_num))
+			power_of_two, level = collatz.collatz(mod52dec(test_num))
 			add_to_db(test_num,power_of_two,level)
 #This while loop is just to fill run_list with identically permuted numbers.  It's irrelevant once we are at numbers higher than we can fit in RAM.
 			x = test_num
@@ -52,36 +51,13 @@ def mod52dec(n):
 	dec = (multiplier * 32) + modlist[x]
 	return dec
 
-def collatz(n):
-	x = n
-	permut = []
-	poweroftwo = 1
-	while x >= n:
-		if x % 2 == 0:
-			x = x/2
-			if x % 2 != 0 or x < n:
-				permut.append(poweroftwo)
-				poweroftwo = 1
-			else:
-				poweroftwo += 1
-		else:
-			x = (x * 3) + 1
-	return sum(permut), len(permut)
-
-test_range = 10000
+#test_range = 100000
 #test_range = 1093750000 #7 billion
 #test_range = 937500000 #6 billion
 #test_range = 781250000 #5 billion
 #test_range = 625000000 #4 billion
-#test_range = 468750000 #3 billion
+test_range = 468750000 #3 billion
 #test_range = 156250000 #billion
 run_range(0,test_range)
 for i in test_dic:
 	print("Level " + str(i) + " " + str(len(test_dic[i])))
-
-
-#theory: using the mod5 number, x += 5 * (2**(power_of_two-5))
-#5 repeats every 5.
-#6 repeats every 10.
-#7 repeats every 20.
-#8 repeats every 40.
