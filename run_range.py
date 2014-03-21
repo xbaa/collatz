@@ -11,7 +11,7 @@ def run_range(start,stop):
 	run_list = [0] * (stop-start)
 #	populist(start,stop,run_list)
 	test_num = start
-	while  test_num < stop:
+	while  test_num <= stop:
 		if check((test_num-start),run_list) == False:
 			power_of_two, level = collatz.collatz(mod52dec(test_num))
 			add_to_db(test_num,power_of_two,level)
@@ -61,3 +61,4 @@ test_range = 468750000 #3 billion
 run_range(0,test_range)
 for i in test_dic:
 	print("Level " + str(i) + " " + str(len(test_dic[i])))
+print(test_dic[447])
