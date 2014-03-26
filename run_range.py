@@ -1,5 +1,6 @@
 import collatz
 import pseudo_mod_converter
+import leveldic
 
 """Returns False if list_of_run[n] equals zero"""
 #this part doesn't take into account having a non-zero start number.  currently handled when calling this procedure.
@@ -9,19 +10,25 @@ def check(n,run_list):
 
 """Accepts a start and stop number, then populates a list with the appropriate power of two by calling collatz"""
 def run_range(start,stop):
-	run_list = [0] * (stop-start+1)
-#	populist(start,stop,run_list)
+	run_list = [0] * (stop-start+1) #can be handled by populist() when we finish that.
+	level_dic = leveldic.load_leveldic()
+#	run_list = populist(start,stop,run_list)
 	test_num = start
 	while  test_num <= stop:
 		if check((test_num-start),run_list) == False:
 			power_of_two, level = collatz.collatz(pseudo_mod_converter.mod52dec(test_num))
+			if power_of_two not in level_dic:
+				level_dic[power_of_two] = level
+			elif level_dic[power_of_two] != level:
+				print("We have found a discrepancy between level and power_of_two in test_num " + str(test_num+start))
 			add_to_db(test_num,power_of_two,level)
-#This while loop is just to fill run_list with identically permuted numbers.  It's irrelevant once we are at numbers higher than we can fit in RAM.
+			#This while loop is just to fill run_list with identically permuted numbers.  It's irrelevant once we are at numbers higher than we can fit in RAM.
 			x = test_num
 			while x < stop:
 				run_list[(x-start)] = 1
 				x += 5 * (2**(power_of_two-5))
 		test_num += 1
+	leveldic.save_leveldic(level_dic)
 	#when we reach here, we can send something back to MySQL proving we've completed this group of numbers.
 
 test_dic = {} #just using to test speed compared to older collatz program.
