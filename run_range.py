@@ -10,9 +10,10 @@ def check(n,run_list):
 
 """Accepts a start and stop number, then populates a list with the appropriate power of two by calling collatz"""
 def run_range(start,stop):
+	test_dic = {}
 	run_list = [0] * (stop-start+1) #can be handled by populist() when we finish that.
 	level_dic = leveldic.load_leveldic()
-#	run_list = populist(start,stop,run_list)
+#	run_list = mysql_module.populist(start,stop,run_list)
 	test_num = start
 	while  test_num <= stop:
 		if check((test_num-start),run_list) == False:
@@ -29,17 +30,14 @@ def run_range(start,stop):
 				x += 5 * (2**(power_of_two-5))
 		test_num += 1
 	leveldic.save_leveldic(level_dic)
-	#when we reach here, we can send something back to MySQL proving we've completed this group of numbers.
+	#mysql_module.mysql_dump(test_dic) #this will send all the test_dic info to be saved on MySQL
 
-test_dic = {} #just using to test speed compared to older collatz program.
-
-"""Adds entry to MySQL Database.  Requires open MySQL connection."""
+"""Adds entry to test_dic."""
 def add_to_db(n,power_of_two,level):
-	#MySQL jibberish.  Add the level (i.e. len(permut)) to MySQL.  Then we can later confirm level is the same for all power_of_two.
 	if power_of_two in test_dic:
 		test_dic[power_of_two].append(n)
 	else:
-		test_dic[power_of_two] = [n]  #this is just for testing before we set up MySQL
+		test_dic[power_of_two] = [n]
 
 #def populist(start,stop,list):
 	#MySQL jibberish.  Use all numbers that repeat within "stop".  Some won't exist at all, but we definitely won't miss any.
@@ -52,6 +50,6 @@ test_range = 100000
 #test_range = 468750000 #3 billion
 #test_range = 156250000 #billion
 run_range(0,test_range)
-for i in test_dic:
-	print("Level " + str(i) + " " + str(len(test_dic[i])))
+#for i in test_dic:
+#	print("Level " + str(i) + " " + str(len(test_dic[i])))
 
